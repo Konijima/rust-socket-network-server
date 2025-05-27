@@ -1,12 +1,12 @@
 # Socket Network Server
 
-This is a simple, secure WebSocket server in Rust that authenticates clients using RSA keypairs (challenge-response with signed nonce). Only clients with registered public keys can connect.
+A simple, secure Rust WebSocket server authenticating clients using RSA PKCS#1 keypairs (challenge-response with signed nonce). Only clients with registered public keys can connect.
 
 ## Features
 
 - WebSocket server (port 8081 by default)
 - RSA-based client authentication (PKCS#1 public keys)
-- Broadcast incoming messages to all connected clients
+- Broadcasts incoming messages to all connected clients
 
 ## Requirements
 
@@ -15,24 +15,39 @@ This is a simple, secure WebSocket server in Rust that authenticates clients usi
 
 ## Setup
 
-### 1. Generate keys for each client
+### 1. Generate an RSA Keypair for Each Client
 
-**On any device:**
+**Always use this command to get a compatible PKCS#1 private key:**
 
 ```sh
 mkdir -p keys
-openssl genpkey -algorithm RSA -out keys/device123.p8.pem -pkeyopt rsa_keygen_bits:2048
-openssl rsa -in keys/device123.p8.pem -out keys/device123.pem
-rm keys/device123.p8.pem
-openssl rsa -in keys/device123.pem -pubout -RSAPublicKey_out -out keys/device123.pub.pem
+openssl genrsa -traditional -out keys/device123.pem 2048
 ````
 
-* Place **public key** (`device123.pub.pem`) in the server’s `keys/` directory.
+* The private key will look like this:
 
-### 2. Register the public key
+  ```
+  -----BEGIN RSA PRIVATE KEY-----
+  ```
+
+**Then extract the public key (for the server):**
+
+```sh
+openssl rsa -in keys/device123.pem -pubout -RSAPublicKey_out -out keys/device123.pub.pem
+```
+
+* The public key will look like this:
+
+  ```
+  -----BEGIN RSA PUBLIC KEY-----
+  ```
+
+### 2. Register the Public Key
+
+Copy each client’s `device123.pub.pem` to the server’s `keys/` directory.
 
 By default, `main.rs` loads `keys/device123.pub.pem`.
-To allow more clients, update `load_client_keys()`.
+To allow more clients, update the `load_client_keys()` function in the source code.
 
 ### 3. Build and Run
 
@@ -47,17 +62,21 @@ The server listens on `ws://0.0.0.0:8081`.
 
 1. Client connects; server sends a nonce (base64 challenge).
 2. Client responds with an authentication message, including a signature.
-3. If authentication succeeds, client can send/receive messages.
+3. If authentication succeeds, the client can send/receive messages.
 4. Messages from clients are broadcast to all connected clients.
 
 ## Troubleshooting
 
-* If you see ASN1 or PEM errors, make sure the public key is in **PKCS#1** format (`-----BEGIN RSA PUBLIC KEY-----`).
-* Signature verification errors: check that the client’s public/private keypair matches.
+* **ASN1 or PEM errors:**
+  Ensure all keys are in PKCS#1 PEM format (not PKCS#8).
+  Private key: `-----BEGIN RSA PRIVATE KEY-----`
+  Public key:  `-----BEGIN RSA PUBLIC KEY-----`
+* **Signature verification errors:**
+  Make sure the client’s public/private keypair matches.
 
 ## Security Notes
 
-* The server does not use TLS; run behind a reverse proxy if needed.
+* The server does not use TLS; run behind a reverse proxy for encrypted transport if needed.
 * Only pre-registered clients can connect.
 
 ## License
