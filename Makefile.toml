@@ -1,0 +1,40 @@
+[env]
+CARGO_MAKE_EXTEND_WORKSPACE_MAKEFILE = true
+
+[config]
+default_task = "dev"
+
+[tasks.dev]
+description = "Run in development mode"
+command = "cargo"
+args = ["run"]
+
+[tasks.build]
+description = "Build the project"
+command = "cargo"
+args = ["build"]
+
+[tasks.release]
+description = "Build in release mode"
+command = "cargo"
+args = ["build", "--release"]
+
+[tasks.test]
+description = "Run tests"
+command = "cargo"
+args = ["test"]
+
+[tasks.fmt]
+description = "Format code"
+command = "cargo"
+args = ["fmt", "--all"]
+
+[tasks.clippy]
+description = "Lint with clippy"
+command = "cargo"
+args = ["clippy", "--all-targets", "--all-features", "--", "-D", "warnings"]
+
+[tasks.audit]
+description = "Check for vulnerable dependencies"
+command = "cargo"
+args = ["audit"]
