@@ -2,6 +2,9 @@
 
 A simple, secure Rust WebSocket server authenticating clients using RSA PKCS#1 keypairs (challenge-response with signed nonce). Only clients with registered public keys can connect.
 
+## Get the client repo here
+[Socket Network Client](https://github.com/Konijima/rust-socket-network-client)
+
 ## Features
 
 - WebSocket server (port 8081 by default)
