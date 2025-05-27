@@ -16,7 +16,7 @@ Thumbs.db
 
 # Key and secret files (do NOT commit private keys!)
 keys/*.pem
-!keys/*.pub.pem
+keys/*.pub.pem
 
 # Node, Python, or other tooling (optional, safe for polyglot repos)
 /node_modules/
