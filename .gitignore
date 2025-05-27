@@ -1,0 +1,33 @@
+# Rust/Cargo build and temp files
+/target/
+**/*.rs.bk
+Cargo.lock
+# VSCode/JetBrains settings (optional)
+.vscode/
+.idea/
+
+# OS/junk files
+.DS_Store
+Thumbs.db
+
+# Byproducts of running, testing, docs
+*.log
+*.swp
+
+# Key and secret files (do NOT commit private keys!)
+keys/*.pem
+!keys/*.pub.pem
+
+# Node, Python, or other tooling (optional, safe for polyglot repos)
+/node_modules/
+/venv/
+/env/
+/__pycache__/
+
+# Misc (optional, if you have test data or temp scratch)
+/tmp/
+*.tmp
+
+# Backup files
+*~
+*.bak
